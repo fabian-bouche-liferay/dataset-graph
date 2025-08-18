@@ -1,0 +1,48 @@
+{
+	"fieldSets": [
+		{
+			"fields": [
+				{
+					"dataType": "string",
+					"defaultValue": "c9d9a5fe-10d8-156b-412e-e1039132be9b",
+					"label": "Dataset ERC",
+					"localizable": false,
+					"name": "datasetERC",
+					"type": "text"
+				}
+			]
+		},
+      {
+         "fields": [
+               {
+                  "name": "colorA",
+                  "label": "1st Color",
+                  "description": "1st Color",
+                  "type": "colorPicker",
+                  "defaultValue": "#333"
+               },
+               {
+                  "name": "colorB",
+                  "label": "2nd Color",
+                  "description": "2nd Color",
+                  "type": "colorPicker",
+                  "defaultValue": "#666"
+               },
+               {
+                  "name": "colorC",
+                  "label": "3rd Color",
+                  "description": "3rd Color",
+                  "type": "colorPicker",
+                  "defaultValue": "#999"
+               },
+               {
+                  "name": "colorD",
+                  "label": "4th Color",
+                  "description": "4th Color",
+                  "type": "colorPicker",
+                  "defaultValue": "#BBB"
+               }
+         ]
+      }
+   ]
+}
