@@ -1,0 +1,79 @@
+name: Publish dataset-graph to GitHub Pages
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install
+        run: |
+          if [ -f yarn.lock ]; then corepack enable && yarn install --frozen-lockfile; \
+          else npm ci; fi
+
+      # IMPORTANT: on donne le "base" à Vite sans toucher au vite.config
+      # (sert à réécrire les chemins des assets quand le site est servi sous /dataset-graph/)
+      - name: Build
+        run: |
+          npx vite build --base="/${{ github.event.repository.name }}/"
+
+      # SPA fallback: évite les 404 au refresh sur des routes côté client
+      - name: Add 404 fallback
+        run: |
+          cp -f dist/index.html dist/404.html
+
+      # Préparer une zone "latest/" avec la client extension prêt-à-télécharger
+      - name: Prepare Pages artifact
+        run: |
+          mkdir -p dist/latest
+          # zip minimal: client-extension.yaml (ajoute d'autres fichiers si besoin)
+          if [ -f client-extension.yaml ]; then \
+            (zip -j dist/latest/dataset-graph-client-extension.zip client-extension.yaml || true); \
+          fi
+          # petite page d'index pour retrouver les artefacts
+          cat > dist/index.html <<'HTML'
+          <!doctype html><meta charset="utf-8">
+          <title>dataset-graph</title>
+          <h1>dataset-graph</h1>
+          <p>Build déployé sur GitHub Pages.</p>
+          <ul>
+            <li><a href="latest/dataset-graph-client-extension.zip">Client Extension (ZIP)</a></li>
+          </ul>
+          <p>L’app est servie ici même ; si vous utilisez un routeur côté client, <code>404.html</code> redirige vers <code>index.html</code>.</p>
+          HTML
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
