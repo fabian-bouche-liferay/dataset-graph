@@ -21,7 +21,7 @@ export const groupDate = (raw, mode) => {
       return date.toISOString().split("T")[0];
     case "week": {
       const firstDay = new Date(date.setDate(date.getDate() - date.getDay()));
-      return `Semaine du ${firstDay.toISOString().split("T")[0]}`;
+      return `Week of ${firstDay.toISOString().split("T")[0]}`;
     }
     case "month":
       return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;

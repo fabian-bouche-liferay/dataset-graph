@@ -2,7 +2,7 @@ const formatFieldValue = (value, field) => {
   if (value == null) return "—";
 
   // Gestion des dates
-  if (field.type === "date" || field.renderer === "date") {
+  if (field.type === "date" || field.renderer === "date" || field.type === "dateTime" || field.renderer === "dateTime") {
     const date = new Date(value);
     if (isNaN(date)) return "Invalide";
     return date.toLocaleDateString(); // ou toISOString() selon besoin

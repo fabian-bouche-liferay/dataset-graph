@@ -18,7 +18,7 @@ export const useGroupedItems = (items, xFields, xGroupings, fields) => {
             const grouping = xGroupings[fieldName] || "none";
 
             if (
-              (fieldMeta?.type === "date" || fieldMeta?.renderer === "date") &&
+              (fieldMeta?.type === "date" || fieldMeta?.renderer === "date" || fieldMeta?.type === "dateTime" || fieldMeta?.renderer === "dateTime") &&
               grouping !== "none"
             ) {
               return groupDate(value, grouping);

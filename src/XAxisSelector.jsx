@@ -1,5 +1,6 @@
 import React from "react";
 import List from "@clayui/list";
+import Button from '@clayui/button';
 
 const XAxisSelector = ({
   xFields,
@@ -33,7 +34,7 @@ const XAxisSelector = ({
     <List>
       <List.Header>Selected category fields</List.Header>
       {selectedFields.map((field, index) => {
-        const isDate = field?.type === "date" || field?.renderer === "date";
+        const isDate = field?.type === "date" || field?.renderer === "date" || field?.type === "dateTime" || field?.renderer === "dateTime";
         return (
           <List.Item key={field.name} flex>
             <List.ItemField expand>
@@ -55,46 +56,53 @@ const XAxisSelector = ({
               )}
             </List.ItemField>
 
-            <List.ItemField>
-              <List.QuickActionMenu>
-                {index > 0 && (
-                  <List.QuickActionMenu.Item
-                    symbol="order-arrow-up"
-                    title="Monter"
-                    onClick={() => {
-                      const updated = [...xFields];
-                      [updated[index - 1], updated[index]] = [
-                        updated[index],
-                        updated[index - 1],
-                      ];
-                      setXFields(updated);
-                    }}
-                  />
-                )}
-                {index < xFields.length - 1 && (
-                  <List.QuickActionMenu.Item
-                    symbol="order-arrow-down"
-                    title="Descendre"
-                    onClick={() => {
-                      const updated = [...xFields];
-                      [updated[index], updated[index + 1]] = [
-                        updated[index + 1],
-                        updated[index],
-                      ];
-                      setXFields(updated);
-                    }}
-                  />
-                )}
-                <List.QuickActionMenu.Item
-                  symbol="times"
-                  title="Remove"
+            {index > 0 && (
+              <List.ItemField>
+                <Button
+                  className="btn-secondary"
                   onClick={() => {
-                    setXFields((prev) =>
-                      prev.filter((f) => f !== field.name)
-                    );
+                    const updated = [...xFields];
+                    [updated[index - 1], updated[index]] = [
+                      updated[index],
+                      updated[index - 1],
+                    ];
+                    setXFields(updated);
                   }}
-                />
-              </List.QuickActionMenu>
+                >
+                  Up
+                </Button>
+              </List.ItemField>
+            )}
+
+            {index < xFields.length - 1 && (
+              <List.ItemField>
+                <Button
+                  className="btn-secondary"
+                  onClick={() => {
+                    const updated = [...xFields];
+                    [updated[index], updated[index + 1]] = [
+                      updated[index + 1],
+                      updated[index],
+                    ];
+                    setXFields(updated);
+                  }}
+                >
+                  Down
+                </Button>
+              </List.ItemField>
+            )}
+
+            <List.ItemField>
+              <Button
+                className="btn-secondary"
+                onClick={() => {
+                  setXFields((prev) =>
+                    prev.filter((f) => f !== field.name)
+                  );
+                }}
+              >
+                Del
+              </Button>
             </List.ItemField>
           </List.Item>
         );
@@ -111,13 +119,12 @@ const XAxisSelector = ({
           </List.ItemField>
 
           <List.ItemField>
-            <List.QuickActionMenu>
-                <List.QuickActionMenu.Item
-                    symbol="plus"
-                    title="Add"
-                    onClick={() => handleAddField(field.name)}
-                />
-            </List.QuickActionMenu>
+            <Button
+              className="btn-secondary"
+              onClick={() => handleAddField(field.name)}
+            >
+              Add
+            </Button>
           </List.ItemField>
         </List.Item>
       ))}

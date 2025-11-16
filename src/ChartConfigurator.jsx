@@ -25,7 +25,7 @@ const ChartConfigurator = ({
         aria-pressed={open}
         onClick={() => setOpen(!open)}
       >
-        <Icon symbol="cog" />
+        Edit
       </Button>
 
       <SidePanel
